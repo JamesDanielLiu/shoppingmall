@@ -4,13 +4,17 @@
         <nav-bar class="home-nav"><div slot="center">推荐</div></nav-bar>
         <home-swiper :banners="homeBanners"/>
         <recommend-view :recommends="recommends"/>
+        <feature-view/>
+        <tab-control :titles ="['流行', '新款', '精选']" class="tab-control" />
     </div>
 </template>
 
 <script>
 import NavBar from '@/components/common/navbar/NavBar.vue';
-import HomeSwiper from '@/views/home/childComps/homeSwiper.vue'
-import RecommendView from '@/views/home/childComps/recommendView'
+import HomeSwiper from '@/views/home/childComps/homeSwiper.vue';
+import RecommendView from '@/views/home/childComps/recommendView';
+import FeatureView from '@/views/home/childComps/FeatureView';
+import TabControl from '@/components/content/TabControl/tabControl';
 
 
 import {getHomeMultidata} from '@/network/home.js'
@@ -22,7 +26,9 @@ export default {
 components: {
     NavBar,
     HomeSwiper,
-    RecommendView
+    RecommendView,
+    FeatureView,
+    TabControl,
 },
 data() {
 //这里存放数据
