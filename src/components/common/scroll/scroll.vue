@@ -1,12 +1,8 @@
-<!-- tabControl选择栏公用组件 -->
+<!-- scroll封装组件 -->
 <template>
-<div class='tab-control'>
-    <div v-for="(item, index) in titles" :key="index" 
-    class="tab-control-item"
-    :class="{active : index === currentIndex}"
-    @click="itemClick(index)"
-    >
-        <span>{{ item }}</span>
+<div class='warpper' ref="warpper">
+    <div class="content">
+        <slot></slot>
     </div>
 </div>
 </template>
@@ -15,22 +11,23 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 
+import BScroll from 'better-scroll'
+
 export default {
+name: 'Scroll',
 //import引入的组件需要注入到对象中才能使用
 components: {},
-props: {
-      titles: {
-        type: Array,
-        default() {
-          return []
-        }
-      }
-    },
 data() {
 //这里存放数据
 return {
-    currentIndex : 0
+    scroll: null
 };
+},
+props:{
+    probeType:{ //父组件传递probeType，0||1为不监听，2只监听手势滑动，3全部监听包括手势放开后的自动滑动距离
+        type: Number,
+        default: 0
+    }
 },
 //监听属性 类似于data概念
 computed: {},
@@ -38,9 +35,8 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-    itemClick(index){
-        this.currentIndex = index;
-        this.$emit('clickTabControl', index);
+    eventScrollTo(x,y,time = 300){
+        this.scroll.scrollTo(x,y,time)
     }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -49,7 +45,14 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+    this.scroll = new BScroll(this.$refs.warpper, {
+        click: true,
+        probeType: this.probeType
+    })
+    this.scroll.on('scroll', (position) => {
+        this.$emit('scroll', position);
+    })
+    
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
@@ -60,26 +63,7 @@ destroyed() {}, //生命周期 - 销毁完成
 activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
+<style scoped>
 
-<style>
-.tab-control{
-    display: flex;
-    text-align: center;
-    font-size: 15px;
-    height: 40px;
-    line-height: 40px;
-    background-color: #fff;
-}
- .tab-control-item {
-    flex: 1;
-  }
-.tab-control-item span {
-    padding: 5px;
-  }
-.active{
-    color: var(--color-high-text);
-}
-.active span{
-    border-bottom: 3px solid var(--color-tint);
-}
+
 </style>

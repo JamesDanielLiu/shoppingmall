@@ -47,18 +47,19 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
 <style scoped>
-    .nav-bar{
-        display: flex;
-        line-height: 44px;
-    }
-    .left,.right{
-        width: 60px;
-    }
-    .center{
-        flex: 1;
-        text-align: center;
-        z-index: 999;
-        box-shadow: 0px 1px 1px rgb(100, 100, 100,0.1);
-    }
+  .nav-bar {
+    display: flex;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    box-shadow: 0 1px 1px rgba(100,100,100,.1);
+  }
 
+  .left, .right {
+    width: 60px;
+  }
+
+  .center {
+    flex: 1;
+  }
 </style>

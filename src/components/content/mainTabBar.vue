@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 导航 -->
 <template>
     <tab-bar>
     <tab-bar-item path = "/home" activeColor = 'deepPink'>

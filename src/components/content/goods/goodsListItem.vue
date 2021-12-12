@@ -1,13 +1,12 @@
-<!-- tabControl选择栏公用组件 -->
+<!-- goods公用商品列表的item组件 -->
 <template>
-<div class='tab-control'>
-    <div v-for="(item, index) in titles" :key="index" 
-    class="tab-control-item"
-    :class="{active : index === currentIndex}"
-    @click="itemClick(index)"
-    >
-        <span>{{ item }}</span>
-    </div>
+<div class='goodsListItem'>
+        <img :src="goodsItem.show.img" alt="">
+        <div class="goodsInfo">
+            <p>{{ goodsItem.title }}</p>
+            <span class="price">{{ `¥ ${goodsItem.price }`}}</span>
+            <span class="collect">{{  goodsItem.cfav }}</span>
+        </div>
 </div>
 </template>
 
@@ -19,17 +18,17 @@ export default {
 //import引入的组件需要注入到对象中才能使用
 components: {},
 props: {
-      titles: {
-        type: Array,
-        default() {
-          return []
+    goodsItem:{
+        type: Object,
+        defaute(){
+            return {}
         }
-      }
-    },
+    }
+},
 data() {
 //这里存放数据
 return {
-    currentIndex : 0
+
 };
 },
 //监听属性 类似于data概念
@@ -38,10 +37,7 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-    itemClick(index){
-        this.currentIndex = index;
-        this.$emit('clickTabControl', index);
-    }
+
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -60,26 +56,44 @@ destroyed() {}, //生命周期 - 销毁完成
 activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
-
 <style>
-.tab-control{
-    display: flex;
+.goodsListItem{
+    padding-bottom: 40px;
+    position: relative;
+    width: 48%;
+}
+.goodsListItem img{
+    width: 100%;
+    border-radius: 5px;
+}
+.goodsInfo{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    font-size: 12px;
     text-align: center;
-    font-size: 15px;
-    height: 40px;
-    line-height: 40px;
-    background-color: #fff;
+    overflow: hidden;
 }
- .tab-control-item {
-    flex: 1;
-  }
-.tab-control-item span {
-    padding: 5px;
-  }
-.active{
+.goodsInfo p{
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 3px;
+}
+.goodsInfo .price {
     color: var(--color-high-text);
+    margin-right: 20px;
+  }
+.goodsInfo .collect{
+    position: relative;
 }
-.active span{
-    border-bottom: 3px solid var(--color-tint);
+.goodsInfo .collect::before{
+    content: '';
+    position: absolute;
+    left: -15px;
+    top: -1px;
+    width: 14px;
+    height: 14px;
+    background: url(~@/assets/img/common/collect.svg) 0 0/14px 14px no-repeat;
 }
 </style>

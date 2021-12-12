@@ -46,7 +46,7 @@ destroyed() {}, //生命周期 - 销毁完成
 activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
-<style>
+<style scoped>
 #tab-bar{
     display: flex;
     position: fixed;
@@ -54,7 +54,8 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
     right: 0;
     bottom: 0;
     background-color: #f6f6f6;
-    box-shadow: 0 -3px 1px rgba(100, 100, 100, 0.1)
+    box-shadow: 0 -3px 1px rgba(100, 100, 100, 0.1);
+    z-index: 10;
   }
   
 

@@ -1,13 +1,7 @@
-<!-- tabControl选择栏公用组件 -->
+<!-- ↑ -->
 <template>
-<div class='tab-control'>
-    <div v-for="(item, index) in titles" :key="index" 
-    class="tab-control-item"
-    :class="{active : index === currentIndex}"
-    @click="itemClick(index)"
-    >
-        <span>{{ item }}</span>
-    </div>
+<div class=''>
+    <img src="~@/assets/img/common/top.png" class="backtop">
 </div>
 </template>
 
@@ -18,18 +12,10 @@
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {},
-props: {
-      titles: {
-        type: Array,
-        default() {
-          return []
-        }
-      }
-    },
 data() {
 //这里存放数据
 return {
-    currentIndex : 0
+
 };
 },
 //监听属性 类似于data概念
@@ -38,10 +24,7 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-    itemClick(index){
-        this.currentIndex = index;
-        this.$emit('clickTabControl', index);
-    }
+
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -60,26 +43,13 @@ destroyed() {}, //生命周期 - 销毁完成
 activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
+<style scoped>
+.backtop{
+    position: fixed;
+    right: 10px;
+    bottom: 54px;
+    width: 44px;
+    height: 44px;
+}
 
-<style>
-.tab-control{
-    display: flex;
-    text-align: center;
-    font-size: 15px;
-    height: 40px;
-    line-height: 40px;
-    background-color: #fff;
-}
- .tab-control-item {
-    flex: 1;
-  }
-.tab-control-item span {
-    padding: 5px;
-  }
-.active{
-    color: var(--color-high-text);
-}
-.active span{
-    border-bottom: 3px solid var(--color-tint);
-}
 </style>
