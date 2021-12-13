@@ -27,6 +27,10 @@ props:{
     probeType:{ //父组件传递probeType，0||1为不监听，2只监听手势滑动，3全部监听包括手势放开后的自动滑动距离
         type: Number,
         default: 0
+    },
+    pullUpLoad:{
+        type: Boolean,
+        default: false
     }
 },
 //监听属性 类似于data概念
@@ -35,8 +39,11 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-    eventScrollTo(x,y,time = 300){
+    eventScrollTo(x,y,time = 300){ //回弹
         this.scroll.scrollTo(x,y,time)
+    },
+    finishPullUp(){ //更新可视区域
+        this.scroll.finishPullUp()
     }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -45,12 +52,18 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
+    //创建scroll对象
     this.scroll = new BScroll(this.$refs.warpper, {
         click: true,
-        probeType: this.probeType
+        probeType: this.probeType,
+        pullUpLoad: this.pullUpLoad
     })
+    //监听滚动位置
     this.scroll.on('scroll', (position) => {
         this.$emit('scroll', position);
+    })
+    this.scroll.on('pullingUp',()=> {
+        this.$emit('pullingUp');
     })
     
 },

@@ -1,5 +1,7 @@
 # shoppingmall
 
+## 一个基于vue2 + VueRouter + Vuex + axios + better-Scroll的商城项目
+
 ## Project setup
 ```
 npm install

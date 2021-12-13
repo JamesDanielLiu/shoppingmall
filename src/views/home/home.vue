@@ -2,13 +2,15 @@
 <template>
     <div id="home">
         <nav-bar class="home-nav"><div slot="center">推荐</div></nav-bar>
-        <scroll class="content" ref="scroll" :probe-type = "3" @scroll = 'contentScroll'>
+        
+        <scroll class="content" ref="scroll" :probe-type = "3" @scroll = 'contentScroll' :pull-up-load= "true" @pullingUp = 'loadMore'> 
         <home-swiper :banners="homeBanners" />
         <recommend-view :recommends="recommends" />
         <feature-view/>
         <tab-control :titles ="['流行', '新款', '精选']" class="tab-control" @clickTabControl = "clickTabControl" />
         <goods-list :goods= "getCurrentType" />
         </scroll>
+
         <back-top @click.native="backClick" v-show="showBackTop"/>
     </div>
 </template>
@@ -61,8 +63,8 @@ return {
         'new': {page: 0, list:[]},
         'sell': {page: 0, list:[]},
     },
-    currentType: 'pop',
-    showBackTop: false
+    currentType: 'pop',  //活跃tabcontraol
+    showBackTop: false 
 };
 },
 
@@ -96,8 +98,10 @@ methods: {
     getHomeGoods(type) { //分发式数据模型
         const page = this.goods[type].page + 1
         getHomeGoods(type,page).then(res => {
-            this.goods[type].list.push(...res.data.list)
-            this.goods[type].page += 1
+            this.goods[type].list.push(...res.data.list);
+            this.goods[type].page += 1;
+
+            this.$refs.scroll.finishPullUp();//数据加载完成通知scroll更新可视区域
         })
     },
 
@@ -106,6 +110,9 @@ methods: {
     },
     contentScroll(position){ //动态绑定showBackTop
         this.showBackTop = -(position.y) > 1000
+    },
+    loadMore(){ //下拉加载更多
+        this.getHomeGoods(this.currentType)
     }
 
 },
