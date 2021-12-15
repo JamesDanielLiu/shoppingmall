@@ -1,7 +1,7 @@
 <!-- goods公用商品列表的item组件 -->
 <template>
 <div class='goodsListItem'>
-        <img :src="goodsItem.show.img" alt="">
+        <img :src="goodsItem.show.img" alt="" @load="imageLoad">
         <div class="goodsInfo">
             <p>{{ goodsItem.title }}</p>
             <span class="price">{{ `¥ ${goodsItem.price }`}}</span>
@@ -37,7 +37,9 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-
+    imageLoad(){
+        this.$bus.$emit('itemImageLoad'); //通过事件总线将image onload发射给home
+    }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {

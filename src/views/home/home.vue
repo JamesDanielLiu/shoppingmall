@@ -113,6 +113,17 @@ methods: {
     },
     loadMore(){ //下拉加载更多
         this.getHomeGoods(this.currentType)
+    },
+
+    //debounce
+    debounce(func, interval){
+        let timer = null;
+        return function(...args){
+            if(timer) clearTimeout(timer);
+            timer = setTimeout(()=>{
+                func.apply(this, args)
+            },interval)
+        }
     }
 
 },
@@ -124,10 +135,15 @@ created() {
     this.getHomeGoods('pop');
     this.getHomeGoods('new');
     this.getHomeGoods('sell');
+
+    
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-    
+    const refresh = this.debounce(this.$refs.scroll.refresh, 50);
+    this.$bus.$on('itemImageLoad',() => {  //goodslistitem 图片加载后让scroll重新计算 BetterScroll更新scrollheight
+        refresh()   
+    });
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前

@@ -40,10 +40,13 @@ watch: {},
 //方法集合
 methods: {
     eventScrollTo(x,y,time = 300){ //回弹
-        this.scroll.scrollTo(x,y,time)
+        this.scroll && this.scroll.scrollTo(x,y,time)
     },
     finishPullUp(){ //更新可视区域
         this.scroll.finishPullUp()
+    },
+    refresh(){ //重新计算BetterScroll
+        this.scroll && this.scroll.refresh()
     }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -56,7 +59,7 @@ mounted() {
     this.scroll = new BScroll(this.$refs.warpper, {
         click: true,
         probeType: this.probeType,
-        pullUpLoad: this.pullUpLoad
+        pullUpLoad: this.pullUpLoad,
     })
     //监听滚动位置
     this.scroll.on('scroll', (position) => {
