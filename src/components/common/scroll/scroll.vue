@@ -39,7 +39,7 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-    eventScrollTo(x,y,time = 300){ //回弹
+    eventScrollTo(x,y,time = 300){ //于当前位置偏移滚动 x,y 的距离，第三个参数为滚动时间，单位ms
         this.scroll && this.scroll.scrollTo(x,y,time)
     },
     finishPullUp(){ //更新可视区域
@@ -62,12 +62,17 @@ mounted() {
         pullUpLoad: this.pullUpLoad,
     })
     //监听滚动位置
-    this.scroll.on('scroll', (position) => {
-        this.$emit('scroll', position);
-    })
-    this.scroll.on('pullingUp',()=> {
-        this.$emit('pullingUp');
-    })
+    if(this.probeType === 2 || this.probeType === 3){
+            this.scroll.on('scroll', (position) => {
+            this.$emit('scroll', position);
+        })
+    }
+    //上拉加载
+    if(this.pullUpLoad){
+            this.scroll.on('pullingUp',()=> {
+            this.$emit('pullingUp');
+        })
+    }
     
 },
 beforeCreate() {}, //生命周期 - 创建之前

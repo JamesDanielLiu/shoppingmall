@@ -1,6 +1,6 @@
 <!-- goods公用商品列表的item组件 -->
 <template>
-<div class='goodsListItem'>
+<div class='goodsListItem' @click="itemClick">
         <img :src="goodsItem.show.img" alt="" @load="imageLoad">
         <div class="goodsInfo">
             <p>{{ goodsItem.title }}</p>
@@ -39,6 +39,10 @@ watch: {},
 methods: {
     imageLoad(){
         this.$bus.$emit('itemImageLoad'); //通过事件总线将image onload发射给home
+    },
+    itemClick(){
+        //配置动态路由为商品id
+        this.$router.push('/detail/' + this.goodsItem.iid)
     }
 },
 //生命周期 - 创建完成（可以访问当前this实例）

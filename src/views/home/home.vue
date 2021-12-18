@@ -2,12 +2,17 @@
 <template>
     <div id="home">
         <nav-bar class="home-nav"><div slot="center">推荐</div></nav-bar>
+        <!-- 伪装tabcontrol -->
+        <tab-control :titles ="['流行', '新款', '精选']" class="tab-control" 
+                     @clickTabControl = "clickTabControl" ref="tabControl1" 
+                      v-show="isTabFixed"/>
         
         <scroll class="content" ref="scroll" :probe-type = "3" @scroll = 'contentScroll' :pull-up-load= "true" @pullingUp = 'loadMore'> 
-        <home-swiper :banners="homeBanners" />
+        <home-swiper :banners="homeBanners" @swiperImgload = "getSwiperHeight"/>
         <recommend-view :recommends="recommends" />
         <feature-view/>
-        <tab-control :titles ="['流行', '新款', '精选']" class="tab-control" @clickTabControl = "clickTabControl" />
+        <!-- 显示tabcontrol -->
+        <tab-control :titles ="['流行', '新款', '精选']"  @clickTabControl = "clickTabControl" ref="tabControl2"/>
         <goods-list :goods= "getCurrentType" />
         </scroll>
 
@@ -23,6 +28,9 @@ import FeatureView from '@/views/home/childComps/FeatureView';
 import TabControl from '@/components/content/TabControl/tabControl';
 import GoodsList from '@/components/content/goods/goodsList';
 import BackTop from '@/components/content/backtop/backtop';
+
+
+import {debounce} from '@/common/utils.js'
 
 
 import {
@@ -64,7 +72,9 @@ return {
         'sell': {page: 0, list:[]},
     },
     currentType: 'pop',  //活跃tabcontraol
-    showBackTop: false 
+    showBackTop: false ,
+    swiperHeight: 0,
+    isTabFixed : false,
 };
 },
 
@@ -84,6 +94,12 @@ methods: {
             case 2:
                 this.currentType = 'sell'
         }
+        this.$refs.tabControl1.currentIndex = index;
+        this.$refs.tabControl2.currentIndex = index;
+    },
+    //获取轮播图高度
+    getSwiperHeight(){
+        this.swiperHeight = this.$refs.tabControl2.$el.offsetTop
     },
 
     //网络请求
@@ -109,22 +125,16 @@ methods: {
         this.$refs.scroll.eventScrollTo(0,0,300) //eventScrollTo(x,y,time = 300)
     },
     contentScroll(position){ //动态绑定showBackTop
-        this.showBackTop = -(position.y) > 1000
+        // 1.判断backtop是否显示
+        this.showBackTop = (-position.y) > 1000
+        // 2.判断tabControl是否吸顶
+        this.isTabFixed = (-position.y) > this.swiperHeight
     },
     loadMore(){ //下拉加载更多
         this.getHomeGoods(this.currentType)
     },
 
-    //debounce
-    debounce(func, interval){
-        let timer = null;
-        return function(...args){
-            if(timer) clearTimeout(timer);
-            timer = setTimeout(()=>{
-                func.apply(this, args)
-            },interval)
-        }
-    }
+    
 
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -140,7 +150,8 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-    const refresh = this.debounce(this.$refs.scroll.refresh, 50);
+    //goods图片加载完的事件监听
+    const refresh = debounce(this.$refs.scroll.refresh, 50);  //防抖处理
     this.$bus.$on('itemImageLoad',() => {  //goodslistitem 图片加载后让scroll重新计算 BetterScroll更新scrollheight
         refresh()   
     });
@@ -163,22 +174,23 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
         background-color: var(--color-tint);
         color: #fff;
 
-        position: fixed;
+        /* position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        z-index: 9;
+        z-index: 10; */
     }
-    .tab-control{
-        position: sticky;
-        top: 44px;
-        z-index: 9;
-    }
+
     .content{
         position: absolute;
         top: 44px;
         bottom: 49px;
         left: 0;
         right: 0;
+        overflow: hidden;
+    }
+    .tab-control{
+        position: relative;
+        z-index: 9;
     }
 </style>
