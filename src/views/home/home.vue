@@ -73,8 +73,9 @@ return {
     },
     currentType: 'pop',  //活跃tabcontraol
     showBackTop: false ,
-    swiperHeight: 0,
+    swiperHeight: 0,  
     isTabFixed : false,
+    saveY : 0
 };
 },
 
@@ -162,7 +163,14 @@ beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后
 beforeDestroy() {}, //生命周期 - 销毁之前
 destroyed() {}, //生命周期 - 销毁完成
-activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
+activated() {
+    this.$refs.scroll.refresh()   //刷新要放在回滚上面
+    this.$refs.scroll.eventScrollTo(0 , this.saveY , 0)  //返回页面时滚动到保存的saveY。
+}, //如果页面有keep-alive缓存功能，这个函数会触发
+deactivated() {
+    console.log(this.saveY)
+    this.saveY = this.$refs.scroll.getScrollY()   //离开页面时将Y保存
+},
 }
 </script>
 <style scoped>

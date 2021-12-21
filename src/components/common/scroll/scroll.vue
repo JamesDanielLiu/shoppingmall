@@ -47,6 +47,9 @@ methods: {
     },
     refresh(){ //重新计算BetterScroll
         this.scroll && this.scroll.refresh()
+    },
+    getScrollY(){
+        return this.scroll ? this.scroll.y : 0
     }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
